@@ -2,7 +2,9 @@ var express = require('express');
 var router = express.Router();
 var basex = require('basex');
 var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
+var title = "Colenso Database";
 client.execute("OPEN Colenso");
+
 
 router.get('/search', function(req, res) {
   var searchTerm = req.query.searchString;
@@ -19,10 +21,14 @@ router.get('/search', function(req, res) {
 //"//name[@type = 'place' and position() = 1 and . = '"+searchTerm+"']",
   client.execute(completeQuery,
   function (error, result) {
-    if(error){ console.error(error);}
+    if(error){
+      console.error(error);
+      var errorMessage = "Invalid XQUERY: "+ error;
+      res.render('search', { title: title, content:errorMessage })
+    }
     else {
       console.log("Result: " + result.result);
-      res.render('search', { title: 'Colenso Database', content: result.result });
+      res.render('search', { title: title, content: result.result });
     }
   }
   );
@@ -35,7 +41,7 @@ client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/n
 function (error, result) {
   if(error){ console.error(error);}
   else {
-    res.render('index', { title: 'Colenso Database', place: result.result });
+    res.render('index', { title: title, place: result.result });
   }
     }
     );
