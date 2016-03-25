@@ -15,7 +15,7 @@ router.get('/search', function(req, res) {
     for(i=1;i<stringArray.length;i++){
       query += stringArray[i]+ " ";
     }
-    var completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; " + query;
+    var completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; base-uri(" + query + ")";
   }
   //client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; " +
 //"//name[@type = 'place' and position() = 1 and . = '"+searchTerm+"']",
@@ -27,7 +27,7 @@ router.get('/search', function(req, res) {
       res.render('search', { title: title, content:errorMessage })
     }
     else {
-      console.log("Result: " + result.result);
+      console.log("Result: "+result.result);
       res.render('search', { title: title, content: result.result });
     }
   }
