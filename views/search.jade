@@ -1,4 +1,7 @@
 extends ../node_modules/jade-bootstrap/_bootstrap
+append styles
+  link(rel="stylesheet" href="stylesheets/style.css")
+
 block body
   +navbar("Colenso", "dropdown_menu")
     +nav_item("/", "active") Home
@@ -10,4 +13,4 @@ block body
         input(type="text", name="searchString")
         input(type="submit")
     .container
-      p #{content}.
+      p !{content}.

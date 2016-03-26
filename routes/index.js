@@ -15,7 +15,7 @@ router.get('/search', function(req, res) {
     for(i=1;i<stringArray.length;i++){
       query += stringArray[i]+ " ";
     }
-    var completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; base-uri(" + query + ")";
+    var completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in " + query + "\n return (doc(base-uri($n)))//titleStmt";
   }
   //client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; " +
 //"//name[@type = 'place' and position() = 1 and . = '"+searchTerm+"']",
@@ -27,8 +27,17 @@ router.get('/search', function(req, res) {
       res.render('search', { title: title, content:errorMessage })
     }
     else {
-      console.log("Result: "+result.result);
-      res.render('search', { title: title, content: result.result });
+      var content;
+      if(result.result){
+        var resultsArray = result.result.split("<author>");
+        content = "Documents that matched your query: </br>" + result.result;
+      }
+      else{
+        content = "No documents matched your query";
+      }
+      //split on author tag?
+      //throw extra formating tags in and table
+      res.render('search', { title: title, content: content });
     }
   }
   );
