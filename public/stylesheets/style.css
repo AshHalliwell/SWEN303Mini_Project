@@ -9,8 +9,8 @@ a {
 
 title{
   display: inline;
-  color: red;
 }
-author{
-  color: green;
+
+.result{
+  padding: 10px;
 }

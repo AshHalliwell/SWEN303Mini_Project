@@ -27,10 +27,16 @@ router.get('/search', function(req, res) {
       res.render('search', { title: title, content:errorMessage })
     }
     else {
-      var content;
+      var content = "";
       if(result.result){
-        var resultsArray = result.result.split("<author>");
-        content = "Documents that matched your query: </br>" + result.result;
+        var resultsArray = result.result.split("</titleStmt>");
+        //fix split
+        content = "Documents that matched your query: </br> <div id='resultsTable'>";
+        for(i=0;i<resultsArray.length;i++){
+          var currentResult = resultsArray[i].split("<author>");
+          content += "<div class= 'result'>" + currentResult[0] + "Written by <author>" +currentResult[1] + "</titleStmt></div>";
+        }
+        content+= "</div>";
       }
       else{
         content = "No documents matched your query";
