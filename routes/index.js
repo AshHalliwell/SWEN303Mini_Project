@@ -15,7 +15,7 @@ router.get('/search', function(req, res) {
     for(i=1;i<stringArray.length;i++){
       query += stringArray[i]+ " ";
     }
-    var completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in " + query + "\n return (doc(base-uri($n)))//titleStmt";
+    var completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in " + query + "\n return (doc(base-uri($n))//titleStmt, base-uri($n))";
   }
   //client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; " +
 //"//name[@type = 'place' and position() = 1 and . = '"+searchTerm+"']",
@@ -29,17 +29,14 @@ router.get('/search', function(req, res) {
     else {
       var content = "";
       if(result.result){
-        var resultsArray = result.result.split("</titleStmt>");
-        //fix split
-        content = "Documents that matched your query: </br> <div id='resultsTable'>";
-        for(i=0;i<resultsArray.length;i++){
-          var currentResult = resultsArray[i].split("<author>");
-          content += "<div class= 'result'>" + currentResult[0] + "Written by <author>" +currentResult[1] + "</titleStmt></div>";
-        }
-        content+= "</div>";
-      }
-      else{
-        content = "No documents matched your query";
+        var resultArray = result.result.split(".xml");
+        content = "Documents that matched your query: </br> <div id='resultsTable'><form action='document'>";
+          for(i = 0 ; i < resultArray.length - 1; i++ ){
+            var currentResult = resultArray[i].split("</titleStmt>");
+            var titleStmtArray = currentResult[0].split("<author>");
+            content += "<div class= 'result'><button name='documentURI' value='" + currentResult[1] + "'>" + titleStmtArray[0] + "Written by <author>" +titleStmtArray[1] + "</button></div>";
+          }
+        content+= "</form></div>";
       }
       //split on author tag?
       //throw extra formating tags in and table
