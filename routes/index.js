@@ -6,6 +6,23 @@ var title = "Colenso Database";
 client.execute("OPEN Colenso");
 
 
+router.get('/document', function(req, res) {
+  //console.log(req.query.document);
+  client.execute("XQUERY doc('" + req.query.documentURI + "')",
+  function(error, result){
+    if(error){
+      console.log(error);
+      res.render('document', { title: title, content:error });
+    }
+    else{
+      res.render('document', { title: title, content:result.result });
+    }
+  }
+  );
+
+});
+
+
 router.get('/search', function(req, res) {
   var searchTerm = req.query.searchString;
   var stringArray = searchTerm.split(" ");
@@ -34,7 +51,7 @@ router.get('/search', function(req, res) {
           for(i = 0 ; i < resultArray.length - 1; i++ ){
             var currentResult = resultArray[i].split("</titleStmt>");
             var titleStmtArray = currentResult[0].split("<author>");
-            content += "<div class= 'result'><button name='documentURI' value='" + currentResult[1] + "'>" + titleStmtArray[0] + "Written by <author>" +titleStmtArray[1] + "</button></div>";
+            content += "<div class= 'result'><button name='documentURI' value='" + currentResult[1] + ".xml'>" + titleStmtArray[0] + "Written by <author>" +titleStmtArray[1] + "</button></div>";
           }
         content+= "</form></div>";
       }

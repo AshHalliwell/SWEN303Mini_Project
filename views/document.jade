@@ -1,0 +1,18 @@
+extends ../node_modules/jade-bootstrap/_bootstrap
+append styles
+  link(rel="stylesheet" href="stylesheets/style.css")
+
+head
+  title=title
+  block body
+    +navbar("Colenso", "dropdown_menu")
+      +nav_item("/", "active") Home
+      +nav_item("/list") Letters
+    .container
+      h1 Search page
+      .container
+        form(action="/search", method="get")
+          input(type="text", name="searchString")
+          input(type="submit")
+      .container
+        p !{content}.
