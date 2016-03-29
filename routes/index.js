@@ -119,12 +119,18 @@ router.get('/document', function(req, res) {
   //console.log(req.query.document);
   client.execute("XQUERY doc('" + req.query.documentURI + "')",
   function(error, result){
+    var content;
     if(error){
       console.log(error);
-      res.render('document', { title: title, content:error });
+      content = "There was an error loading this document";
+      res.render('document', { title: title, content:content });
     }
     else{
-      res.render('document', { title: title, content:result.result});
+      content = "<div class='letter'>";
+      //var contentArray = result.result.split(" ");
+      content += result.result;
+      content += "</div>";
+      res.render('document', { title: title, content:content});
     }
   }
   );

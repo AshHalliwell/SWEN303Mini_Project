@@ -7,16 +7,62 @@ a {
   color: #00B7FF;
 }
 
+.letter{
+  padding: 50px;
+}
+
 title{
   display: inline;
+}
+
+.letter titleStmt{
+  text-align: center;
+  font-size: 150%;
+  margin: 50px;
+}
+
+date{
+  display: hidden;
+}
+
+.letter sourceDesc{
+  margin: 50px;
+  font-style: italic;
+}
+
+front{
+  padding: 10px;
+  text-align: center;
+  font-size: 110%;
+}
+
+.result button{
+  background: #c9eb9e;
+  background-image: -webkit-linear-gradient(top, #c9eb9e, #6d8c54);
+  background-image: -moz-linear-gradient(top, #c9eb9e, #6d8c54);
+  background-image: -ms-linear-gradient(top, #c9eb9e, #6d8c54);
+  background-image: -o-linear-gradient(top, #c9eb9e, #6d8c54);
+  background-image: linear-gradient(to bottom, #c9eb9e, #6d8c54);
+  -webkit-border-radius: 16;
+  -moz-border-radius: 16;
+  border-radius: 16px;
+  font-family: Arial;
+  color: #000000;
+  padding: 10px 20px 10px 20px;
+  border: solid #6e8a54 2px;
+  text-decoration: none;
+}
+
+.result button:hover{
+  background: #baff6b;
+  background-image: -webkit-linear-gradient(top, #baff6b, #7ba34d);
+  background-image: -moz-linear-gradient(top, #baff6b, #7ba34d);
+  background-image: -ms-linear-gradient(top, #baff6b, #7ba34d);
+  background-image: -o-linear-gradient(top, #baff6b, #7ba34d);
+  background-image: linear-gradient(to bottom, #baff6b, #7ba34d);
+  text-decoration: none;
 }
 
 .result{
   padding: 10px;
 }
-nav
-  .brand-logo
-    margin-left 20px
-  form
-    margin-left 180px
-    width 300px
