@@ -19,7 +19,7 @@ var parseSearch = function(array, currentString, index){
       if(wildcardIndex!=array[index].length -1){
         after = array[index].substring(wildcardIndex+1);
       }
-      var newString = currentString + before + "\\S+?" + after+ " ";
+      var newString = currentString + before + "\\S+" + after;
       return "(matches(string($n), '" + newString + "'))";
     }
     return "(matches(string($n), '" + currentString + array[index] + "'))";
@@ -50,7 +50,7 @@ var parseSearch = function(array, currentString, index){
       if(wildcardIndex!=array[index].length -1){
         after = array[index].substring(wildcardIndex+1);
       }
-      var newString = currentString + before + "\\S+?" + after + " ";
+      var newString = currentString + before + "\\S+?" + after;
       return parseSearch(array, newString, index +1);
     }
     //normal search terms
@@ -74,20 +74,20 @@ var parseNot = function(array, currentString, index){
         after = array[index].substring(wildcardIndex+1);
 
       }
-      var newString = currentString + before + "\\S+?" + after+ " ";
+      var newString = currentString + before + "\\S+?" + after;
       return "(matches(string($n), '" + newString + "')))";
     }
     return "(matches(string($n), '" + currentString + array[index] + "')))";
   }
     //AND operator
-    else if(array[index] === "AND"){
+    else if(array[index].toUpperCase() === "AND"){
       return "(matches(string($n), '" + currentString + "'))) and "+ parseSearch(array, "",index + 1);
     }
     //OR operator
-    else if(array[index] === "OR"){
+    else if(array[index].toUpperCase() === "OR"){
       return "(matches(string($n), '" + currentString + "'))) or "+ parseSearch(array, "",index + 1);
     }
-    else if(array[index] === "NOT"){
+    else if(array[index].toUpperCase() === "NOT"){
       if(currentString != ""){
         return "(matches(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
       }
@@ -104,13 +104,13 @@ var parseNot = function(array, currentString, index){
       if(wildcardIndex!=array[index].length -1){
         after = array[index].substring(wildcardIndex+1);
       }
-      var newString = currentString + before + "\\S+?" + after + " ";
-      return parseSearch(array, newString, index +1);
+      var newString = currentString + before + "\\S+?" + after;
+      return parseNot(array, newString, index +1);
     }
     //normal search terms
     else{
       var newString = currentString + array[index]+ " ";
-      return parseSearch(array, newString, index +1);
+      return parseNot(array, newString, index +1);
     }
 }
 
