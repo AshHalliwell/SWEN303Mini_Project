@@ -12,7 +12,8 @@ block body
     +nav_item
       form(action="/search", method="get")
         input(type="text", name="searchString")
-        input(type="submit" value="Search")
+        button.btn.btn-success(type='submit')
+         +icon("search")
   .container
     h1 Document
     .container

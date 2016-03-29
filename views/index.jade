@@ -9,10 +9,12 @@ block body
     +nav_item("/", "active") Home
     +nav_item("/list") Letters
     +nav_item
-      form(action="/search", method="get")
+      form(action="/search", method="get" alignment="right")
         input(type="text", name="searchString")
-        input(type="submit" value="Search")
+        button.btn.btn-success(type='submit')
+         +icon("search")
+
   .container
     h1 #{title}
     .container
-      p| Welcome to #{title}. We have an excellent collection of videos in stock for you.      | We are based in #{place}
+      p Welcome to the #{title}. The Colenso Society, Victoria University of Wellington and MTG Hawke's Bay are delighted to announce the establishment of the Colenso Project. This exciting new initiative seeks to build on the blossoming national and international interest in William Colenso’s life and ideas as the result of the William Colenso Bicentenary Celebrations in Hawke’s Bay in 2011, and a body of new publications and research.      P The intent of the Project is to ignite public and academic interest in Colenso’s words – published, unpublished, private letters, journals - both in Maori and English, by sharing them with the world in digital form. We envisage a hub for all things Colenso: a place to read documents in the original, explore his writing through transcriptions, and as a place to experiment with new research and interpretation methods.

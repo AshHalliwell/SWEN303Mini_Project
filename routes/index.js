@@ -2,7 +2,7 @@ var express = require('express');
 var router = express.Router();
 var basex = require('basex');
 var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
-var title = "Colenso Database";
+var title = "Colenso Project";
 client.execute("OPEN Colenso");
 
 var parseSearch = function(array, currentString, index){
