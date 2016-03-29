@@ -5,6 +5,91 @@ var client = new basex.Session("127.0.0.1", 1984, "admin", "admin");
 var title = "Colenso Database";
 client.execute("OPEN Colenso");
 
+var parseSearch = function(array, currentString, index){
+  if(index == array.length - 1){
+    return "(contains(string($n), '" + currentString + array[index] + "'))";
+  }
+    //AND operator
+    else if(array[index] === "AND"){
+      return "(contains(string($n), '" + currentString + "')) and "+ parseSearch(array, "",index + 1);
+    }
+    //OR operator
+    else if(array[index] === "OR"){
+      return "(contains(string($n), '" + currentString + "')) or "+ parseSearch(array, "",index + 1);
+    }
+    //NOT operator
+    else if(array[index] === "NOT"){
+      if(currentString != ""){
+        return "(contains(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
+      }
+      return "not("+ parseNot(array, "",index + 1);
+    }
+    //Wildcard and normal search terms
+    else{
+  /*  for(i=0;i<array[index].length;i++){
+      if(array[index][i] === "*"){
+          var newString = currentString + " (contains(string($n), '"+ array[index].substring(0,i) + "')(substring-after(string($n),'" + array[index].substring(0,i) +"')" + array[index].substring(i+1,array[index].length) + "))";
+          return "(contains(string($n), '"+ array[index].substring(0,i) + "')(substring-after(string($n),'" + array[index].substring(0,i) +"')" + parseSearch(array, "", index + 1) + "))";
+
+    //  return  "[substring-after(., "sony")[contains(., "on")";
+      }
+    }*/
+      var newString = currentString + array[index]+ " ";
+      return parseSearch(array, newString, index +1);
+    }
+  }
+
+var parseWildcard = function(array, currentString, index){
+  if(index == array.length - 1){
+    return "(contains(string($n), '" + currentString + array[index] + "'))";
+  }
+    //AND operator
+    else if(array[index] === "AND"){
+      return "(contains(string($n), '" + currentString + "')) and "+ parseSearch(array, "",index + 1);
+    }
+    //OR operator
+    else if(array[index] === "OR"){
+      return "(contains(string($n), '" + currentString + "')) or "+ parseSearch(array, "",index + 1);
+    }
+    //NOT operator
+    else if(array[index] === "NOT"){
+      if(currentString != ""){
+        return "(contains(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
+      }
+      return "not("+ parseNot(array, "",index + 1);
+    }
+    //normal search terms
+    else{
+      var newString = currentString + array[index]+ " ";
+      return parseSearch(array, newString, index +1);
+    }
+  }
+
+var parseNot = function(array, currentString, index){
+  if(index == array.length - 1){
+    return "(contains(string($n), '" + currentString + array[index] + "')))";
+  }
+    //AND operator
+    else if(array[index] === "AND"){
+      return "(contains(string($n), '" + currentString + "'))) and "+ parseSearch(array, "",index + 1);
+    }
+    //OR operator
+    else if(array[index] === "OR"){
+      return "(contains(string($n), '" + currentString + "'))) or "+ parseSearch(array, "",index + 1);
+    }
+    else if(array[index] === "NOT"){
+      if(currentString != ""){
+        return "(contains(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
+      }
+      return "not("+ parseNot(array, "",index + 1);
+    }
+    //normal search terms
+    else{
+      var newString = currentString + array[index]+ " ";
+      return parseSearch(array, newString, index +1);
+    }
+}
+
 
 router.get('/document', function(req, res) {
   //console.log(req.query.document);
@@ -32,7 +117,12 @@ router.get('/search', function(req, res) {
     for(i=1;i<stringArray.length;i++){
       query += stringArray[i]+ " ";
     }
-    var completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in " + query + "\n return (doc(base-uri($n))//titleStmt, base-uri($n))";
+    completeQuery = stringArray[0]+ " declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in " + query + "\n return (doc(base-uri($n))//titleStmt, base-uri($n))";
+  }
+  else{
+    var query = parseSearch(stringArray, "", 0);
+    console.log(query);
+    completeQuery = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in //teiHeader where " + query + " return (doc(base-uri($n))//titleStmt, base-uri($n))";
   }
   //client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; " +
 //"//name[@type = 'place' and position() = 1 and . = '"+searchTerm+"']",
@@ -47,11 +137,15 @@ router.get('/search', function(req, res) {
       var content = "";
       if(result.result){
         var resultArray = result.result.split(".xml");
+        var URIlist = "";
         content = "Documents that matched your query: </br> <div id='resultsTable'><form action='document'>";
           for(i = 0 ; i < resultArray.length - 1; i++ ){
             var currentResult = resultArray[i].split("</titleStmt>");
-            var titleStmtArray = currentResult[0].split("<author>");
-            content += "<div class= 'result'><button name='documentURI' value='" + currentResult[1] + ".xml'>" + titleStmtArray[0] + "Written by <author>" +titleStmtArray[1] + "</button></div>";
+            if(URIlist.indexOf(currentResult[1]) == -1){
+              URIlist +=currentResult[1];
+              var titleStmtArray = currentResult[0].split("<author>");
+              content += "<div class= 'result'><button name='documentURI' value='" + currentResult[1] + ".xml'>" + titleStmtArray[0] + "Written by <author>" +titleStmtArray[1] + "</button></div>";
+            }
           }
         content+= "</form></div>";
       }
