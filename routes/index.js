@@ -124,7 +124,7 @@ router.get('/document', function(req, res) {
       res.render('document', { title: title, content:error });
     }
     else{
-      res.render('document', { title: title, content:result.result });
+      res.render('document', { title: title, content:result.result});
     }
   }
   );
@@ -172,6 +172,9 @@ router.get('/search', function(req, res) {
             }
           }
         content+= "</form></div>";
+      }
+      else{
+        content = "No documents matched your query: "+ req.query.searchString;
       }
       //split on author tag?
       //throw extra formating tags in and table

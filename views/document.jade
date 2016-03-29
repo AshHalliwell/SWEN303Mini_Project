@@ -4,15 +4,16 @@ append styles
 
 head
   title=title
-  block body
-    +navbar("Colenso", "dropdown_menu")
-      +nav_item("/", "active") Home
-      +nav_item("/list") Letters
+
+block body
+  +navbar(title)
+    +nav_item("/", "active") Home
+    +nav_item("/list") Letters
+    +nav_item
+      form(action="/search", method="get")
+        input(type="text", name="searchString")
+        input(type="submit" value="Search")
+  .container
+    h1 Document
     .container
-      h1 Search page
-      .container
-        form(action="/search", method="get")
-          input(type="text", name="searchString")
-          input(type="submit")
-      .container
-        p !{content}.
+      p !{content}

@@ -5,14 +5,14 @@ append styles
 head
   title=title
 block body
-  +navbar("Colenso", "dropdown_menu")
+  +navbar(title)
     +nav_item("/", "active") Home
     +nav_item("/list") Letters
     +nav_item
-    form(action="/search", method="get")
+      form(action="/search", method="get")
         input(type="text", name="searchString")
-        input(type="submit")
+        input(type="submit" value="Search")
   .container
     h1 #{title}
     .container
-    p| Welcome to #{title}. We have an excellent collection of videos in stock for you.    | We are based in #{place}    .container      form(action="/search", method="get")        input(type="text", name="searchString")        input(type="submit")
+      p| Welcome to #{title}. We have an excellent collection of videos in stock for you.      | We are based in #{place}
