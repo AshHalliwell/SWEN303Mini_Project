@@ -8,6 +8,10 @@ block body
   +navbar("Colenso", "dropdown_menu")
     +nav_item("/", "active") Home
     +nav_item("/list") Letters
+    +nav_item
+    form(action="/search", method="get")
+        input(type="text", name="searchString")
+        input(type="submit")
   .container
     h1 #{title}
     .container

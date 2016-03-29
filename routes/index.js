@@ -6,57 +6,52 @@ var title = "Colenso Database";
 client.execute("OPEN Colenso");
 
 var parseSearch = function(array, currentString, index){
+  //if last word
   if(index == array.length - 1){
-    return "(contains(string($n), '" + currentString + array[index] + "'))";
+    //Check for Wildcard
+    var wildcardIndex = array[index].indexOf('*');
+    if(wildcardIndex >= 0){
+      var before = "";
+      var after = "";
+      if(wildcardIndex !=0){
+        before = array[index].substring(0,wildcardIndex);
+      }
+      if(wildcardIndex!=array[index].length -1){
+        after = array[index].substring(wildcardIndex+1);
+      }
+      var newString = currentString + before + "\\S+?" + after+ " ";
+      return "(matches(string($n), '" + newString + "'))";
+    }
+    return "(matches(string($n), '" + currentString + array[index] + "'))";
   }
     //AND operator
-    else if(array[index] === "AND"){
-      return "(contains(string($n), '" + currentString + "')) and "+ parseSearch(array, "",index + 1);
+    else if(array[index].toUpperCase() === "AND"){
+      return "(matches(string($n), '" + currentString + "')) and "+ parseSearch(array, "",index + 1);
     }
     //OR operator
-    else if(array[index] === "OR"){
-      return "(contains(string($n), '" + currentString + "')) or "+ parseSearch(array, "",index + 1);
+    else if(array[index].toUpperCase() === "OR"){
+      return "(matches(string($n), '" + currentString + "')) or "+ parseSearch(array, "",index + 1);
     }
     //NOT operator
-    else if(array[index] === "NOT"){
+    else if(array[index].toUpperCase() === "NOT"){
       if(currentString != ""){
-        return "(contains(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
+        return "(matches(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
       }
       return "not("+ parseNot(array, "",index + 1);
     }
-    //Wildcard and normal search terms
-    else{
-  /*  for(i=0;i<array[index].length;i++){
-      if(array[index][i] === "*"){
-          var newString = currentString + " (contains(string($n), '"+ array[index].substring(0,i) + "')(substring-after(string($n),'" + array[index].substring(0,i) +"')" + array[index].substring(i+1,array[index].length) + "))";
-          return "(contains(string($n), '"+ array[index].substring(0,i) + "')(substring-after(string($n),'" + array[index].substring(0,i) +"')" + parseSearch(array, "", index + 1) + "))";
-
-    //  return  "[substring-after(., "sony")[contains(., "on")";
+    //Wildcard
+    var wildcardIndex = array[index].indexOf('*');
+    if(wildcardIndex >= 0){
+      var before = "";
+      var after = "";
+      if(wildcardIndex !=0){
+        before = array[index].substring(0,wildcardIndex);
       }
-    }*/
-      var newString = currentString + array[index]+ " ";
+      if(wildcardIndex!=array[index].length -1){
+        after = array[index].substring(wildcardIndex+1);
+      }
+      var newString = currentString + before + "\\S+?" + after + " ";
       return parseSearch(array, newString, index +1);
-    }
-  }
-
-var parseWildcard = function(array, currentString, index){
-  if(index == array.length - 1){
-    return "(contains(string($n), '" + currentString + array[index] + "'))";
-  }
-    //AND operator
-    else if(array[index] === "AND"){
-      return "(contains(string($n), '" + currentString + "')) and "+ parseSearch(array, "",index + 1);
-    }
-    //OR operator
-    else if(array[index] === "OR"){
-      return "(contains(string($n), '" + currentString + "')) or "+ parseSearch(array, "",index + 1);
-    }
-    //NOT operator
-    else if(array[index] === "NOT"){
-      if(currentString != ""){
-        return "(contains(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
-      }
-      return "not("+ parseNot(array, "",index + 1);
     }
     //normal search terms
     else{
@@ -67,21 +62,50 @@ var parseWildcard = function(array, currentString, index){
 
 var parseNot = function(array, currentString, index){
   if(index == array.length - 1){
-    return "(contains(string($n), '" + currentString + array[index] + "')))";
+    //Check for Wildcard
+    var wildcardIndex = array[index].indexOf('*');
+    if(wildcardIndex >= 0){
+      var before = "";
+      var after = "";
+      if(wildcardIndex !=0){
+        before = array[index].substring(0,wildcardIndex);
+      }
+      if(wildcardIndex!=array[index].length -1){
+        after = array[index].substring(wildcardIndex+1);
+
+      }
+      var newString = currentString + before + "\\S+?" + after+ " ";
+      return "(matches(string($n), '" + newString + "')))";
+    }
+    return "(matches(string($n), '" + currentString + array[index] + "')))";
   }
     //AND operator
     else if(array[index] === "AND"){
-      return "(contains(string($n), '" + currentString + "'))) and "+ parseSearch(array, "",index + 1);
+      return "(matches(string($n), '" + currentString + "'))) and "+ parseSearch(array, "",index + 1);
     }
     //OR operator
     else if(array[index] === "OR"){
-      return "(contains(string($n), '" + currentString + "'))) or "+ parseSearch(array, "",index + 1);
+      return "(matches(string($n), '" + currentString + "'))) or "+ parseSearch(array, "",index + 1);
     }
     else if(array[index] === "NOT"){
       if(currentString != ""){
-        return "(contains(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
+        return "(matches(string($n), '" + currentString + "')) not("+ parseNot(array, "",index + 1);
       }
       return "not("+ parseNot(array, "",index + 1);
+    }
+    //Wildcard
+    var wildcardIndex = array[index].indexOf('*');
+    if(wildcardIndex >= 0){
+      var before = "";
+      var after = "";
+      if(wildcardIndex !=0){
+        before = array[index].substring(0,wildcardIndex);
+      }
+      if(wildcardIndex!=array[index].length -1){
+        after = array[index].substring(wildcardIndex+1);
+      }
+      var newString = currentString + before + "\\S+?" + after + " ";
+      return parseSearch(array, newString, index +1);
     }
     //normal search terms
     else{
