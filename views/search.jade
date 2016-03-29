@@ -3,13 +3,23 @@ append styles
   link(rel="stylesheet" href="stylesheets/style.css")
 
 block body
-  +navbar(title)
-    +nav_item("/", "active") Home
-    +nav_item("/list") Letters
-    +nav_item
-      form(action="/search", method="get")
-        input(type="text", name="searchString")
-        input(type="submit" value="Search")
+  nav.navbar.navbar-default.navbar-fixed-top
+    .container
+      .navbar-header
+        button.navbar-toggle.collapsed(type='button', data-toggle='collapse', data-target='#navbar', aria-expanded='false', aria-controls='navbar')
+          span.sr-only Toggle navigation
+         span.icon-bar
+         span.icon-bar
+         span.icon-bar
+      #navbar.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-right
+          +nav_item("/", "active") Home
+          +nav_item("/list") Letters
+          +nav_item
+            form(action="/search", method="get" alignment="right")
+              input(type="text", name="searchString")
+              button.btn.btn-success(type='submit')
+               +icon("search")
   .container
     h1 Search page
     .container
