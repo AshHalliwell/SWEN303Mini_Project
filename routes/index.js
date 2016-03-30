@@ -168,7 +168,7 @@ router.get('/search', function(req, res) {
       if(result.result){
         var resultArray = result.result.split(".xml");
         var URIlist = "";
-        content = "Documents that matched your query: </br> <div id='resultsTable'><form action='document'>";
+        content = "<p>Documents that matched your query: </p> <div id='resultsTable'><form action='document'>";
           for(i = 0 ; i < resultArray.length - 1; i++ ){
             var currentResult = resultArray[i].split("</titleStmt>");
             if(URIlist.indexOf(currentResult[1]) == -1){

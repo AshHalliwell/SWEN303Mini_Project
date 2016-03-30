@@ -15,8 +15,10 @@ block body
           span.icon-bar
           span.icon-bar
       #navbar.collapse.navbar-collapse
+        ul.nav.navbar-nav.navbar-left
+          H2 Colenso Project
         ul.nav.navbar-nav.navbar-right
-          +nav_item("/", "active") Home
+          +nav_item("/") Home
           +nav_item("/list") Letters
           +nav_item
             form(action="/search", method="get" alignment="right")

@@ -36,6 +36,22 @@ front{
   font-size: 110%;
 }
 
+#resultsTable{
+  border: dashed #6e8a54 2px;
+  margin:10px;
+}
+
+.result{
+  margin:auto;
+  width: 90%;
+}
+
+.result author{
+  font-style: italic;
+}
+.result title{
+}
+
 .result button{
   background: #c9eb9e;
   background-image: -webkit-linear-gradient(top, #c9eb9e, #6d8c54);
