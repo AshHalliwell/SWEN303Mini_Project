@@ -2,9 +2,6 @@ extends ../node_modules/jade-bootstrap/_bootstrap
 append styles
   link(rel="stylesheet" href="stylesheets/style.css")
 
-head
-  title=title
-
 block body
   nav.navbar.navbar-default.navbar-fixed-top
     .container
@@ -19,12 +16,13 @@ block body
           H2 Colenso Project
         ul.nav.navbar-nav.navbar-right
           +nav_item("/") Home
-          +nav_item("/browse") Browse Letters
+          +nav_item("/browse", "active") Browse Letters
           +nav_item
             form(action="/search", method="get" alignment="right")
               input(type="text", name="searchString")
               button.btn.btn-success(type='submit')
                +icon("search")
   .container
+    h3 Browse Letters
     .container
       p !{content}

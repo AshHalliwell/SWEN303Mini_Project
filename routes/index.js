@@ -114,6 +114,43 @@ var parseNot = function(array, currentString, index){
     }
 }
 
+router.get('/browse', function(req, res) {
+  //console.log(req.query.document);
+  client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in //teiHeader \n return (doc(base-uri($n))//titleStmt, base-uri($n))",
+  function(error, result){
+    var content;
+    if(error){
+      console.log(error);
+      content = "There was an error accessing the database: " + error;
+      res.render('browse', { title: title, content:content });
+    }
+    else {
+      var content = "";
+      if(result.result){
+        var resultArray = result.result.split(".xml");
+        var URIlist = "";
+        content = "<p>Viewing all letters: </p> <div id='resultsTable'><form action='document'>";
+          for(i = 0 ; i < resultArray.length - 1; i++ ){
+            var currentResult = resultArray[i].split("</titleStmt>");
+            if(URIlist.indexOf(currentResult[1]) == -1){
+              URIlist +=currentResult[1];
+              var titleStmtArray = currentResult[0].split("<author>");
+              content += "<div class= 'result'><button name='documentURI' value='" + currentResult[1] + ".xml'>" + titleStmtArray[0] + "Written by <author>" +titleStmtArray[1] + "</button></div>";
+            }
+          }
+        content+= "</form></div>";
+      }
+      else{
+        content = "No documents were found :("
+      }
+      //split on author tag?
+      //throw extra formating tags in and table
+      res.render('search', { title: title, content: content });
+  }
+}
+  );
+
+});
 
 router.get('/document', function(req, res) {
   //console.log(req.query.document);
@@ -152,7 +189,6 @@ router.get('/search', function(req, res) {
   }
   else{
     var query = parseSearch(stringArray, "", 0);
-    console.log(query);
     completeQuery = "XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; for $n in //teiHeader where " + query + " return (doc(base-uri($n))//titleStmt, base-uri($n))";
   }
   //client.execute("XQUERY declare default element namespace 'http://www.tei-c.org/ns/1.0'; " +

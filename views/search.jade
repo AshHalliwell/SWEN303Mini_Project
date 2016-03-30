@@ -16,13 +16,13 @@ block body
           H2 Colenso Project
         ul.nav.navbar-nav.navbar-right
           +nav_item("/") Home
-          +nav_item("/list") Letters
+          +nav_item("/browse") Browse Letters
           +nav_item
             form(action="/search", method="get" alignment="right")
               input(type="text", name="searchString")
               button.btn.btn-success(type='submit')
                +icon("search")
   .container
-    h1 Search page
+    h3 Search Results
     .container
       p !{content}
