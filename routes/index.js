@@ -127,6 +127,7 @@ router.get('/document', function(req, res) {
     }
     else{
       content = "<div class='letter'>";
+      content += "<p><a href='" + req.query.documentURI + "' download> Download this file</a></p>";
       //var contentArray = result.result.split(" ");
       content += result.result;
       content += "</div>";
